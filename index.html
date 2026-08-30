@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Invitation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+        }
+
+        .heart {
+            font-size: 50px;
+            color: #ff4b2b;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #333333;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666666;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .yes-btn, .submit-btn {
+            background-color: #ff4b2b;
+            color: white;
+            flex: 1;
+        }
+
+        .yes-btn:hover, .submit-btn:hover {
+            background-color: #ff2a03;
+        }
+
+        .no-btn, .ignore-btn {
+            background-color: #e0e0e0;
+            color: #333;
+            flex: 1;
+        }
+
+        /* Music Toggle Button Styling */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            border: 2px solid #ff9a9e;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Shown after clicking Yes */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .music-btn:hover {
+            background-color: #fff0f3;
+        }
+
+        /* Step Form Styling */
+        #step-2, #step-confirm, #step-staycation, #step-3 {
+            display: none;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .fixed-date-badge {
+            background-color: #fff0f3;
+            border: 2px solid #ffccd5;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            color: #ff4b2b;
+            font-size: 16px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option-card {
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: #ff9a9e;
+            background-color: #fff0f3;
+        }
+
+        .option-card input {
+            display: none;
+        }
+
+        .option-card input:checked + .card-box {
+            border-color: #ff4b2b;
+            background-color: #fff0f5;
+        }
+
+        .card-box {
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Sub-options & Custom Input Styling */
+        #spa-options-group, #custom-place-group {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff8f9;
+            border: 2px dashed #ffb6c1;
+            border-radius: 12px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .custom-place-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ffb6c1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .custom-place-input:focus {
+            border-color: #ff4b2b;
+            box-shadow: 0 0 5px rgba(255, 75, 43, 0.3);
+        }
+
+        .sub-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sub-option-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            transition: all 0.2s;
+        }
+
+        .sub-option-card:hover {
+            border-color: #ff4b2b;
+            background-color: #fff0f3;
+        }
+
+        .sub-option-card input[type="radio"] {
+            display: inline-block;
+            accent-color: #ff4b2b;
+        }
+
+        /* Final Step Styling */
+        .summary-box {
+            background-color: #fff0f3;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .summary-item {
+            margin-bottom: 12px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        /* Custom Popup Modal Styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            padding: 30px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 320px;
+            width: 90%;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-emoji {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .modal-content p {
+            color: #333333;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .modal-close-btn {
+            background-color: #ff4b2b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #ff2a03;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop src="876.mp3"></audio>
+
+    <button id="musicToggle" class="music-btn" onclick="toggleAudio()">🎵</button>
+
+    <div class="card">
+        <div class="heart">♥️</div>
+
+        <div id="step-1">
+            <p><b>Hi mahals ko,</b></p>
+            <h1>Will You Go On a Date With Me?</h1>
+            <p>I would love to take you out for a special time together for our anniversary and your birthday!</p>
+            
+            <div class="btn-container">
+                <button class="yes-btn" onclick="goToStep2()">Yes, I'd love to!</button>
+                <button class="no-btn" id="noBtn" onmouseover="moveButton(this)">No</button>
+            </div>
+        </div>
+
+        <div id="step-2">
+            <h1>Yay! Let's Plan It 🎉</h1>
+            <p>Here's what I have in mind. Pick what you're in the mood for:</p>
+
+            <form id="dateForm" onsubmit="showConfirmation(event)" novalidate>
+                <div class="form-group">
+                    <label>Date & Time:</label>
+                    <div class="fixed-date-badge">
+                        📅 Saturday, September 26, 2026
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Where should we go?</label>
+                    <div class="options-grid">
+                        <label class="option-card">
+                            <input type="radio" name="place" value="Fancy Lunch 🍷" onchange="togglePlaceOptions()">
+                            <div class="card-box">
+                                <span class="icon">🍷</span>
+                                <span>Fancy Lunch</span>
+                            </div>
+                        </label>
+
+                        <label class="option-card">
+                            <input type="radio" name="place" value="Spa Date 💆🏻‍♀️" onchange="togglePlaceOptions()">
+                            <div class="card-box">
+                                <span class="icon">💆🏻‍♀️</span>
+                                <span>Spa Date</span>
+                            </div>
+                        </label>
+
+                        <label class="option-card">
+                            <input type="radio" name="place" value="Surprise Me! ✨" onchange="togglePlaceOptions()">
+                            <div class="card-box">
+                                <span class="icon">✨</span>
+                                <span>Surprise Me!</span>
+                            </div>
+                        </label>
+
+                        <label class="option-card">
+                            <input type="radio" name="place" value="Other" onchange="togglePlaceOptions()">
+                            <div class="card-box">
+                                <span class="icon">📍</span>
+                                <span>Other Place</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div id="spa-options-group">
+                        <label>Choose a Spa Location 🌸</label>
+                        <div class="sub-options-list">
+                            <label class="sub-option-card">
+                                <input type="radio" name="spaLocation" value="Emgrand Spa" checked>
+                                <span>Emgrand Spa (Aseana City, Parañaque)</span>
+                            </label>
+                            <label class="sub-option-card">
+                                <input type="radio" name="spaLocation" value="The New Lasema Spa Jjimjilbang">
+                                <span>The New Lasema Spa Jjimjilbang (Makati)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="custom-place-group">
+                        <label>Where would you like to go? 💭</label>
+                        <input type="text" id="customPlaceInput" class="custom-place-input" placeholder="Type your ideal place/activity...">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="submit-btn" id="confirmBtn">Confirm Plan 💕</button>
+                    <button type="button" class="ignore-btn" id="ignoreBtn" onclick="handleNotAvailable()">Not Available 🙈</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="step-confirm">
+            <h1>Are you sure? ♥️</h1>
+            <p>Please double-check your choice before locking it in!</p>
+            
+            <div class="summary-box">
+                <div class="summary-item"><strong>📅 When:</strong> <span id="confDate"></span></div>
+                <div class="summary-item"><strong>📍 Activity:</strong> <span id="confPlace"></span></div>
+                <div class="summary-item"><strong>🏢 Location & Address:</strong> <br><span id="confAddress"></span></div>
+            </div>
+
+            <div class="btn-container">
+                <button type="button" class="yes-btn" onclick="goToStaycation()">Yes Sure!</button>
+                <button type="button" class="no-btn" onclick="backToStep2()">No, go back ↩️</button>
+            </div>
+        </div>
+
+        <div id="step-staycation">
+            <div class="heart">🏨✨</div>
+            <h1>One More Thing... </h1>
+            <p>Can I ask you for overnight in our house so I can spend more time with you?</p>
+
+            <div class="btn-container">
+                <button type="button" class="yes-btn" onclick="finalizePlan(true)">Yes 🛌💖</button>
+                <button type="button" class="no-btn" onclick="finalizePlan(false)">No 😊</button>
+            </div>
+        </div>
+
+        <div id="step-3">
+            <h1>It's a Date! 🥂</h1>
+            <p>I've locked in our plans. Can't wait to see you!</p>
+            <b>I love you so much always mahals ko!</b>
+            
+            <div class="summary-box">
+                <div class="summary-item"><strong>📅 When:</strong> <span id="resDate"></span></div>
+                <div class="summary-item"><strong>📍 Activity:</strong> <span id="resPlace"></span></div>
+                <div class="summary-item"><strong>🏢 Location & Address:</strong> <br><span id="resAddress"></span></div>
+                <div class="summary-item"><strong>🏨 Overnight Staycation:</strong> <span id="resStaycation"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-content">
+            <div class="modal-emoji">😭</div>
+            <p id="modalMessage">PLEASE MAHALS CHOOSE OUR PLACE</p>
+            <button class="modal-close-btn" onclick="closeModal()">Okay 😊</button>
+        </div>
+    </div>
+
+    <script>
+        let confirmScale = 1;
+        let ignoreScale = 1;
+        let selectedPlan = {};
+
+        // Replace with your email address
+        const recipientEmail = "odessasantos59@gmail.com";
+
+        const venueDetails = {
+            "Fancy Lunch 🍷": {
+                address: "Seoul Sky Restaurant @ 33rd Floor, MDC 100 Building, Eastwood Ave, Quezon City"
+            },
+            "Emgrand Spa": {
+                address: "Emgrand Spa @ Blk 5 Lot 3 Bradco Ave. Aseana City, Aseana City, Parañaque"
+            },
+            "The New Lasema Spa Jjimjilbang": {
+                address: "The New Lasema Spa @ 8846 Sampaloc St, corner Estrella St, Makati City"
+            }
+        };
+
+        function togglePlaceOptions() {
+            const selectedPlace = document.querySelector('input[name="place"]:checked');
+            const spaGroup = document.getElementById('spa-options-group');
+            const customGroup = document.getElementById('custom-place-group');
+            
+            spaGroup.style.display = 'none';
+            customGroup.style.display = 'none';
+
+            if (selectedPlace) {
+                if (selectedPlace.value === "Spa Date 💆🏻‍♀️") {
+                    spaGroup.style.display = 'block';
+                } else if (selectedPlace.value === "Other") {
+                    customGroup.style.display = 'block';
+                }
+            }
+        }
+
+        function toggleAudio() {
+            const music = document.getElementById('bgMusic');
+            const toggleBtn = document.getElementById('musicToggle');
+            
+            if (music.paused) {
+                music.play();
+                toggleBtn.textContent = '🎵';
+            } else {
+                music.pause();
+                toggleBtn.textContent = '🔇';
+            }
+        }
+
+        function moveButton(buttonElement) {
+            const x = Math.random() * (window.innerWidth - buttonElement.offsetWidth - 100);
+            const y = Math.random() * (window.innerHeight - buttonElement.offsetHeight - 100);
+            buttonElement.style.position = 'fixed';
+            buttonElement.style.left = `${x}px`;
+            buttonElement.style.top = `${y}px`;
+        }
+
+        function handleNotAvailable() {
+            const confirmBtn = document.getElementById('confirmBtn');
+            const ignoreBtn = document.getElementById('ignoreBtn');
+            confirmScale += 0.2;
+            confirmBtn.style.transform = `scale(${confirmScale})`;
+            ignoreScale = Math.max(0.2, ignoreScale - 0.15);
+            ignoreBtn.style.transform = `scale(${ignoreScale})`;
+        }
+
+        function goToStep2() {
+            const music = document.getElementById('bgMusic');
+            const toggleBtn = document.getElementById('musicToggle');
+            
+            if (music) {
+                music.play().catch(error => console.log("Audio play prevented:", error));
+                toggleBtn.style.display = 'flex';
+            }
+
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'block';
+        }
+
+        function showModal(message) {
+            if (message) {
+                document.getElementById('modalMessage').textContent = message;
+            }
+            document.getElementById('customModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        function showConfirmation(event) {
+            event.preventDefault();
+            const selectedPlace = document.querySelector('input[name="place"]:checked');
+
+            if (!selectedPlace) {
+                showModal("PLEASE MAHALS CHOOSE OUR PLACE");
+                return;
+            }
+
+            const fixedDate = "Saturday, Sep 26, 2026";
+            let placeVal = selectedPlace.value;
+            let finalAddress = "";
+
+            if (placeVal === "Spa Date 💆🏻‍♀️") {
+                const selectedSpa = document.querySelector('input[name="spaLocation"]:checked').value;
+                placeVal = `Spa Date 💆🏻‍♀️ (${selectedSpa})`;
+                finalAddress = venueDetails[selectedSpa].address;
+            } else if (placeVal === "Surprise Me! ✨") {
+                const options = ["Fancy Lunch 🍷", "Emgrand Spa", "The New Lasema Spa Jjimjilbang"];
+                const randomIndex = Math.floor(Math.random() * options.length);
+                const chosenOption = options[randomIndex];
+                
+                placeVal = chosenOption.includes("Spa") 
+                    ? `Spa Date 💆🏻‍♀️ (${chosenOption}) (Surprise!)` 
+                    : `${chosenOption} (Surprise!)`;
+                    
+                finalAddress = venueDetails[chosenOption].address;
+            } else if (placeVal === "Other") {
+                const customVal = document.getElementById('customPlaceInput').value.trim();
+                if (!customVal) {
+                    showModal("PLEASE TYPE WHERE YOU WANT TO GO MAHALS 💕");
+                    return;
+                }
+                placeVal = `Custom Choice 📍 (${customVal})`;
+                finalAddress = "To be decided together 💕";
+            } else {
+                finalAddress = venueDetails[placeVal].address;
+            }
+
+            selectedPlan = {
+                date: fixedDate,
+                place: placeVal,
+                address: finalAddress
+            };
+
+            document.getElementById('confDate').textContent = selectedPlan.date;
+            document.getElementById('confPlace').textContent = selectedPlan.place;
+            document.getElementById('confAddress').textContent = selectedPlan.address;
+
+            document.getElementById('step-2').style.display = 'none';
+            document.getElementById('step-confirm').style.display = 'block';
+        }
+
+        function backToStep2() {
+            document.getElementById('step-confirm').style.display = 'none';
+            document.getElementById('step-2').style.display = 'block';
+        }
+
+        function goToStaycation() {
+            document.getElementById('step-confirm').style.display = 'none';
+            document.getElementById('step-staycation').style.display = 'block';
+        }
+
+       function finalizePlan(wantsStaycation) {
+    selectedPlan.staycation = wantsStaycation ? "Yes! Overnight Staycation 🛌💖" : "No, day date only 😊";
+
+    document.getElementById('resDate').textContent = selectedPlan.date;
+    document.getElementById('resPlace').textContent = selectedPlan.place;
+    document.getElementById('resAddress').textContent = selectedPlan.address;
+    document.getElementById('resStaycation').textContent = selectedPlan.staycation;
+
+    document.getElementById('step-staycation').style.display = 'none';
+    document.getElementById('step-3').style.display = 'block';
+
+    // Compose email content
+    const subjectText = wantsStaycation 
+        ? "I'd love to go on a date & staycation with you! 💕" 
+        : "I'd love to go on a date with you! 💕";
+
+    const emailSubject = encodeURIComponent(subjectText);
+    const emailBody = encodeURIComponent(
+        `Hi mahals!\n\nI can't wait for our date!\n\nHere are the details:\n📅 Date: ${selectedPlan.date}\n📍 Activity: ${selectedPlan.place}\n🏢 Address: ${selectedPlan.address}\n🏨 Staycation Overnight: ${selectedPlan.staycation}\n\nSee you then!`
+    );
+
+    // Detect if device is mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        // Mobile route: opens default mail app (Apple Mail, Gmail app, etc.)
+        const mailtoUrl = `mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`;
+        window.location.href = mailtoUrl;
+    } else {
+        // Desktop/Laptop route: opens Gmail web editor in a new browser tab
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipientEmail}&su=${emailSubject}&body=${emailBody}`;
+        window.open(gmailUrl, '_blank');
+    }
+}
+    </script>
+
+</body>
+</html>
